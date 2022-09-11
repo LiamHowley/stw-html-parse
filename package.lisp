@@ -10,8 +10,7 @@
 
   (:import-from
    :stw.util
-   :ensure-list
-   :defclass-with-initargs)
+   :ensure-list)
 
   (:import-from
    :stw.util

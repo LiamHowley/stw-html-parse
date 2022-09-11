@@ -6,6 +6,7 @@
   :description ""
   :serial t
   :components ((:file "package")
+	       (:file "utils")
 	       (:file "meta")
 	       (:file "model")
 	       (:file "parse")))
