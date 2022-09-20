@@ -94,7 +94,35 @@
    :map-attribute
    :tag-open-char
    :serialize
-   :write-to-file))
-   
+   :write-to-file)
 
-(in-package html.parse)
+  (:export
+   :find-ancestor-node
+   :clone-node
+   :walk-tree
+   :retrieve-text-nodes
+   :retrieve-text-nodes-with-token
+   :retrieve-text-nodes-with-tokens
+   :retrieve-text-nodes-with-all-tokens
+   :get-elements-by-tagname
+   :get-element-with-attribute
+   :get-element-with-attributes
+   :get-element-with-attribute-value
+   :get-element-with-attribute-values
+   :get-elements-with-attribute
+   :get-elements-with-attributes
+   :get-elements-with-attribute-value
+   :get-elements-with-attribute-values
+   :get-next-sibling
+   :get-previous-sibling
+   :query-select
+   :query-select-all
+   :attribute-value
+   :remove-node
+   :add-node
+   :insert-before
+   :insert-after
+   :first-of-type
+   :last-of-type
+   :get-elements-by-class
+   :get-element-by-id))
