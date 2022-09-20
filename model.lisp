@@ -81,8 +81,8 @@ of the document."))
 
   (defvar *html-global-attributes*
     '((html-class :attribute "class" :initarg :class :type cons :accessor html-class)
-      (data-* :initarg :data-* :type aggregate :accessor data-*)
-      (aria-* :initarg :aria-* :type aggregate :accessor aria-*)
+      (data-* :initarg :data-* :type cons :accessor data-*)
+      (aria-* :initarg :aria-* :type cons :accessor aria-*)
       (event-* :type global-event-attribute
        :attribute "on*"
        :reader event-*
@@ -117,11 +117,8 @@ I.e. use only as required.")
 
 
 (define-sgml-node !--[if (!--)
-  ()
+  ((closing-tag :initarg :closing-tag :initform "<![endif]-->"))
   (:documentation "conditional comments - IE specific"))
-
-(defmethod initialize-instance :before ((class !--[if) &key)
-  (setf (slot-value class 'closing-tag) *end-conditional*))
 
 
 (define-html-node html ()

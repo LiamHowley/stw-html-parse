@@ -11,6 +11,9 @@
 			       :overwrite overwrite)))
 	
 
+(defmethod read-content ((node !--[if))
+  (with-slots (the-content) node
+    (setf the-content (funcall *end-conditional*))))
 
 (defmethod map-attribute ((res (eql 'event-*)) attribute length)
   (declare (ignore length))

@@ -15,6 +15,8 @@
 		   :initarg :permitted-aria
 		   :reader permitted-aria)))
 
+(defmethod initialize-instance :after ((class html-element-class) &key)
+  (setf (slot-value class 'element) (string-downcase (symbol-name (class-name class)))))
 
 (defclass html-direct-slot-definition (xml-direct-slot-definition)
   ()
