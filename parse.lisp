@@ -1,14 +1,12 @@
 (in-package html.parse)
 
 
-(defmethod parse-document ((document html-document-node) &key (parser #'read-element) preserve-whitespace (overwrite t))
+(defmethod parse-document ((document html-document-node) &key (parser #'read-element) preserve-whitespace)
   (let ((*end-conditional* (read-until (match-string "<![endif]-->")))
 	(*end-title* (read-until (match-string "</title>" nil)))
 	(*end-script* (read-until (match-string "</script>" nil)))
 	(*end-style* (read-until (match-string "</style>" nil))))
-    (call-next-method document :parser parser
-			       :preserve-whitespace preserve-whitespace
-			       :overwrite overwrite)))
+    (call-next-method)))
 	
 
 (defmethod read-content ((node !--[if))
