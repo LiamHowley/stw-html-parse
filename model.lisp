@@ -101,20 +101,22 @@ I.e. use only as required.")
 (defmacro define-html-node (name supers slots &rest rest)
   ;; add global slots
   (let ((slots
-	 (loop
+	  (loop
 	    for slot in *html-global-attributes*
 	    do (pushnew slot slots :test #'eq)
 	    finally (return slots))))
-    `(define-element-node ,name ,supers
-       ,(loop
-	   for slot in slots
-	   do (setf slot (ensure-list slot))
-	   when (member (car slot) *boolean-attributes* :test #'eq)
-	   do (push 'boolean (cdr slot)) and
-	   do (push :type (cdr slot))
-	   collect slot)
-       (:metaclass html-element-class)
-       ,@rest)))
+    `(progn
+       (define-element-node ,name ,supers
+	 ,(loop
+	    for slot in slots
+	    do (setf slot (ensure-list slot))
+	    when (member (car slot) *boolean-attributes* :test #'eq)
+	      do (push 'boolean (cdr slot)) and
+	    do (push :type (cdr slot))
+	    collect slot)
+	 (:metaclass html-element-class)
+	 ,@rest)
+       (export ',name))))
 
 
 (define-sgml-node !--[if (!--)
