@@ -9,9 +9,8 @@
 
 (defvar *end-script*)
 
-
 ;;; NOTE: THIS IS INCOMPLETE AND UNFINISHED!!!
-;;; How the aggregate valued slots such as data-*, aria-* and event-*
+;;; How the multiple attribute slots such as data-*, aria-* and event-*
 ;;; are handled may also change.
 
 (defclass html-document-node (xml-document-node)
@@ -79,10 +78,12 @@ of the document."))
 
   (defvar *boolean-attributes* `(allowfullscreen async autofocus autoplay checked controls default disabled formnovalidate hidden ismap itemscope loop-attribute multiple muted nomodule novalidate details-open playsinline readonly required reversed selected truespeed))
 
+  (deftype multiple-attributes () '(or null cons))
+
   (defvar *html-global-attributes*
     '((html-class :attribute "class" :initarg :class :type cons :accessor html-class)
-      (data-* :initarg :data-* :type cons :accessor data-*)
-      (aria-* :initarg :aria-* :type cons :accessor aria-*)
+      (data-* :initarg :data-* :type multiple-attributes :accessor data-*)
+      (aria-* :initarg :aria-* :type multiple-attributes :accessor aria-*)
       (event-* :type global-event-attribute
        :attribute "on*"
        :reader event-*

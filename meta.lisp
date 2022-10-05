@@ -1,6 +1,5 @@
 (in-package html.parse)
 
-
 (defclass html-element-class (element-class)
   ((status :initform :active
 	   :initarg :status
