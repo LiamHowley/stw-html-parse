@@ -33,6 +33,7 @@
 
   (:import-from
    :closer-mop
+   :slot-definition-name
    :effective-slot-definition-class
    :direct-slot-definition-class
    :compute-effective-slot-definition
