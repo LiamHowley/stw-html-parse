@@ -1,0 +1,118 @@
+#+LATEX_CLASS: stw-documentation
+#+TITLE: STW-HTML-PARSE
+#+AUTHOR: Liam Howley
+
+#+OPTIONS: toc
+
+** Introduction
+
+STW-HTML-PARSE is yet another html parser. As a thin wrapper around [[https://github.com/liamhowley/stw-xml-parse][STW-XML-PARSE]], it is recommended to read that documentation. What follows here are basic differences in how use STW-HTML-PARSE.
+
+** To Load
+
+Use quickload to call ~(ql:quickload :stw-html-parse)~. If not found in the quickload repositories, add to your local-projects directory.
+
+** Parsing
+
+#+BEGIN_SRC lisp
+(parse-document (make-instance 'html-document-node :file <file>)) or
+(parse-document (make-instance 'html-document-node :document <document>)) or
+#+END_SRC
+
+It is important to remember that when calling PARSE-DOCUMENT, with either a string or pathname, a node of type XML-DOCUMENT-NODE will be created. To parse, call PARSE-DOCUMENT with an instance of HTML-DOCUMENT-NODE passed as the first argument.
+
+*** Some distinctions
+
+1. XML is case sensitive; html is not.
+
+2. XML requires boolean attributes to be displayed with the value "true" or "false". In html, this is achieved by specifying the attribute name alone, or by duplicating the attribute name as its value. (e.g. required="required")
+
+3. XML attributes require single or double quotes around attribute values. For single attribute values, html does not.
+   
+4. XML attributes cannot contain multiple values. Html attributes can.
+   
+5. XML requires all non-void elements to have both an opening and closing tag. Html varies in this requirement according to the element in question.
+   
+
+** Defining a Class
+
+To define a node use the macro DEFINE-HTML-NODE, which returns an instance of HTML-ELEMENT-CLASS. As with instances of ELEMENT-CLASS, and unless specified otherwise, all classes of type HTML-ELEMENT-CLASS are assumed sub classes of BRANCH-NODE. Direct slots of classes of type HTML-ELEMENT-CLASS are of type HTML-DIRECT-SLOT-DEFINITION.
+
+#+BEGIN_SRC lisp
+(define-html-node div ()
+  (id
+   (html-class :attribute "class" :initarg :class :initform nil :reader html-class)))
+=> #<HTML-ELEMENT-CLASS XML.PARSE::DIV>
+
+(define-html-node a ()
+  (href target))
+=>#<HTML-ELEMENT-CLASS XML.PARSE::A>
+#+END_SRC
+
+*** Class Slots
+
+Besides those inherited from ELEMENT-CLASS, HTML-ELEMENT-CLASS contains the additional slots:
+
+**** tag-omission
+
+As mentioned above, conforming html allows specific element tags to be omitted. Either the opening tag, closing tag, or in some cases, both tags may be omitted. See the [[https://html.spec.whatwg.org/#syntax-tag-omission][html spec]] for guidance on this issue. With that said, while this slot is useful for conformance, and can be used programmatically to achieve a generic effect, the ability to correctly parse individual elements with missing tags is best approached by specializing on the BIND-CHILD-NODE method. The rules are idiosyncratic and arbitrary enough to justify individual attention.
+
+**** implicit-aria and permitted-aria
+
+The semantic significance of an attribute, and whether an aria role declaration is permitted.
+
+*** Content Models
+
+Almost all html elements belong to a content model of one type or another. A singleton class for each type is defined, including: 
+
+1. flow-content, 
+
+2. sectioning-root, 
+
+3. heading-content, 
+
+4. phrasing-content, 
+
+5. embedded-content, 
+
+6. interactive-content, 
+
+7. palpable-content, and,
+
+8. scripting-content.
+
+Classes of HTML-ELEMENT-CLASS may inherit from one, more than one, or none of the above classes.
+
+***  Attributes
+
+When defining a class using the DEFINE-HTML-NODE macro, global attributes are added as slots to the class. Any slots that may represent a boolean attribute have their type specified as boolean.
+
+**** aria-* and data-*
+
+Both ARIA-* and DATA-* attributes are parsed as association lists '((<attribute> . <value>)). Whilst aria has a list of global attributes, it also has a sophisticated model of attributes that are relevant only for individual elements. Due to the volume, and for practical reasons, at present, aria-* attributes are parsed in the same manner as data-* attributes.
+
+To be returned to...
+
+**** event-*
+
+A GLOBAL-EVENT-ATTRIBUTE class is available to be assigned to the EVENT-* attribute of any element.
+ 
+
+** Reading and Printing
+
+To invoke the html reader and change the *READTABLE* call ~(set-reader #'html-read)~
+
+** To Do
+
+- Complete document model. All elements and slots are defined, but conforming specs are not.
+
+- Specialize BIND-CHILD-NODE for those elements that may be missing element tags, so to parse them correctly.
+
+- How aria-* is parsed should be assessed.
+   
+
+
+  
+
+
+
