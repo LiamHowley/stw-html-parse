@@ -16,7 +16,7 @@ Use quickload to call ~(ql:quickload :stw-html-parse)~. If not found in the quic
 
 #+BEGIN_SRC lisp
 (parse-document (make-instance 'html-document-node :file <file>)) or
-(parse-document (make-instance 'html-document-node :document <document>)) or
+(parse-document (make-instance 'html-document-node :document <document>))
 #+END_SRC
 
 It is important to remember that when calling PARSE-DOCUMENT, with either a string or pathname, a node of type XML-DOCUMENT-NODE will be created. To parse, call PARSE-DOCUMENT with an instance of HTML-DOCUMENT-NODE passed as the first argument.
