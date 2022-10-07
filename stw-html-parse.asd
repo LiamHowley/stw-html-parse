@@ -11,4 +11,8 @@
 	       (:file "model")
 	       (:file "parse")
 	       (:file "print")
-	       (:file "query")))
+	       (:file "read")
+	       (:file "query"))
+  :long-description
+  #.(uiop:read-file-string
+     (uiop:subpathname *load-pathname* "docs/README.org")))

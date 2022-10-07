@@ -1,8 +1,8 @@
 (in-package :cl-user)
 
 (defpackage html.parse
-  (:use :cl :xml.parse)
   (:nicknames :html)
+  (:use :cl :xml.parse)
 
   (:import-from
    :contextl
@@ -126,4 +126,9 @@
    :first-of-type
    :last-of-type
    :get-elements-by-class
-   :get-element-by-id))
+   :get-element-by-id)
+
+  (:export
+   :remove-reader
+   :set-reader
+   :read-html))
