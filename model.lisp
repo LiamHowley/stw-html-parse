@@ -99,14 +99,14 @@ I.e. use only as required.")
 
 
 (defmacro define-html-node (name supers slots &rest rest)
+  "Wrapper on DEFINE-ELEMENT-NODE macro. "
   ;; add global slots
   (let ((slots
 	  (loop
 	    for slot in *html-global-attributes*
 	    do (pushnew slot slots :test #'eq)
 	    finally (return slots))))
-    `(progn
-       (define-element-node ,name ,supers
+       `(define-element-node ,name ,supers
 	 ,(loop
 	    for slot in slots
 	    do (setf slot (ensure-list slot))
@@ -115,9 +115,7 @@ I.e. use only as required.")
 	    do (push :type (cdr slot))
 	    collect slot)
 	 (:metaclass html-element-class)
-	 ,@rest)
-       (export ',name))))
-
+	 ,@rest)))
 
 (define-sgml-node !--[if (!--)
   ((closing-tag :initarg :closing-tag :initform "<![endif]-->"))
@@ -433,7 +431,7 @@ I.e. use only as required.")
   ((scope :expected-value ("row" "col" "rowgroup" "colgroup"))
    (align :status :obsolete)
    (axis :status :obsolete)
-   (char :status :obsolete)
+   (html-char :attribute "char" :status :obsolete)
    (charoff :status :obsolete)
    (height :status :obsolete)
    (valign :status :obsolete)
