@@ -102,6 +102,36 @@ A GLOBAL-EVENT-ATTRIBUTE class is available to be assigned to the EVENT-* attrib
 
 To invoke the html reader and change the *READTABLE* call ~(set-reader #'html-read)~
 
+#+BEGIN_SRC lisp
+<ul id="linklist">
+   <li class="link"><a href="/link1">link1</a></li>
+   <li class="link"><a href="/link2">link2</a></li>
+   <li class="link"><a href="/link3">link3</a></li>
+   <li class="link"><a href="/link4">link4</a></li>
+   <li class="link"><a href="/link5">link5</a></li>
+</ul>
+
+=> <ul id='linklist'><li class='link'><a href='/link1'>link1</a></li><li class='link'><a href='/link2'>link2</a></li><li class='link'><a href='/link3'>link3</a></li><li class='link'><a href='/link4'>link4</a></li><li class='link'><a href='/link5'>link5</a></li></ul>
+
+(get-elements-by-tagname * "a")
+
+=> (<a href='/link1'>link1</a> <a href='/link2'>link2</a>
+ <a href='/link3'>link3</a> <a href='/link4'>link4</a>
+ <a href='/link5'>link5</a>)
+ 
+(mapcar #'href *)
+
+=> ("/link1" "/link2" "/link3" "/link4" "/link5")
+#+END_SRC
+
+To remove the reader and return to the initial readtable.
+
+#+BEGIN_SRC lisp
+(remove-reader) => #<READTABLE {1005E58353}>
+#+END_SRC
+
+
+
 ** To Do
 
 - Complete document model. All elements and slots are defined, but conforming specs are not.
@@ -109,6 +139,8 @@ To invoke the html reader and change the *READTABLE* call ~(set-reader #'html-re
 - Specialize BIND-CHILD-NODE for those elements that may be missing element tags, so to parse them correctly.
 
 - How aria-* is parsed should be assessed.
+  
+- Mathml and SVG 
    
 
 
