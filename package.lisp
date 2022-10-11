@@ -10,22 +10,16 @@
 
   (:import-from
    :stw.util
-   :ensure-list)
-
-  (:import-from
-   :stw.util
-   :stw-read-char
-   :next
-   :match-string
-   :match-character
-   :read-until
-   :read-and-decode)
+   :ensure-list
+   :parse-stream)
 
   (:import-from
    :stw.util
    :*char-index*
    :*document*
    :*length*
+   :stw-read-char
+   :next
    :match-string
    :match-character
    :read-until
