@@ -6,7 +6,6 @@
   :description "A HTML to DOM style parser; parsing elements and attributes into CLOS objects."
   :serial t
   :components ((:file "package")
-	       (:file "util")
 	       (:file "meta")
 	       (:file "model")
 	       (:file "parse")
