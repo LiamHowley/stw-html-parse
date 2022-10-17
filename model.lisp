@@ -78,16 +78,14 @@ of the document."))
 
   (defvar *boolean-attributes* `(allowfullscreen async autofocus autoplay checked controls default disabled formnovalidate hidden ismap itemscope loop-attribute multiple muted nomodule novalidate details-open playsinline readonly required reversed selected truespeed))
 
-  (deftype multiple-attributes () '(or null cons))
-
   (defvar *html-global-attributes*
     '((html-class :attribute "class" :initarg :class :type cons :accessor html-class)
       (data-* :initarg :data-* :type multiple-attributes :accessor data-*)
       (aria-* :initarg :aria-* :type multiple-attributes :accessor aria-*)
       (event-* :type global-event-attribute
-       :attribute "on*"
-       :reader event-*
-       :documentation "lazy loaded, as the large volume of global events would clobber performance. 
+	       :attribute "on*"
+	       :reader event-*
+	       :documentation "lazy loaded, as the large volume of global events would clobber performance. 
 I.e. use only as required.")
       (dir :initarg :dir :expected-value ("ltr" "rtl" "auto") :accessor dir)
       (translate :initarg :translate :expected-value ("yes" "no") :accessor translate)

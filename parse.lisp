@@ -13,17 +13,7 @@
   (with-slots (the-content) node
     (setf the-content (funcall *end-conditional*))))
 
-(defmethod map-attribute ((res (eql 'event-*)) attribute length)
-  (declare (ignore length))
-  (prepare-slot node result)
-  (funcall *next-attribute*))
-
 (defmethod map-attribute ((res (eql 'aria-*)) attribute length)
-  (declare (ignore length)
-	   (ignore res))
-  (funcall *next-attribute*))
-
-(defmethod map-attribute ((res (eql 'data-*)) attribute length)
   (declare (ignore length)
 	   (ignore res))
   (funcall *next-attribute*))
@@ -45,24 +35,13 @@
     (call-next-method)))
 
 
-(defgeneric assign-slot-value (class slot attribute value)
+(defmethod assign-slot-value ((class element-node) (slot (eql 'event-*)) attribute value)
+  (declare (ignore slot))
+  (with-slots (event-*) class
+    (setf (slot-value event-* (find-symbol attribute 'html.parse)) value)))
 
-  (:method ((class element-node) (slot (eql 'event-*)) attribute value)
-    (declare (ignore slot))
-    (with-slots (event-*) class
-      (setf (slot-value event-* (find-symbol attribute 'stw-html-dom)) value)))
-
-  (:method ((class element-node) (slot (eql 'aria-*)) attribute value)
-    (push (cons attribute value) (slot-value class 'aria-*)))
-
-  (:method ((class element-node) (slot (eql 'data-*)) attribute value)
-    (push (cons attribute value) (slot-value class 'data-*)))
-
-  (:method ((class element-node) slot attribute value)
-    (declare (ignore attribute)
-	     (optimize (safety 0) (speed 3)))
-    (setf (slot-value class slot) value)))
-
+(defmethod assign-slot-value ((class element-node) (slot (eql 'aria-*)) attribute value)
+  (push (cons attribute value) (slot-value class 'aria-*)))
 
 
 (defmethod read-attribute-value ((slot html-direct-slot-definition) attribute slot-type)
