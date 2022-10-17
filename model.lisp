@@ -104,7 +104,8 @@ I.e. use only as required.")
 	    for slot in *html-global-attributes*
 	    do (pushnew slot slots :test #'eq)
 	    finally (return slots))))
-       `(define-element-node ,name ,supers
+    `(eval-when (:compile-toplevel :load-toplevel :execute)
+       (define-element-node ,name ,supers
 	 ,(loop
 	    for slot in slots
 	    do (setf slot (ensure-list slot))
@@ -113,7 +114,7 @@ I.e. use only as required.")
 	    do (push :type (cdr slot))
 	    collect slot)
 	 (:metaclass html-element-class)
-	 ,@rest)))
+	 ,@rest))))
 
 (define-sgml-node !--[if (!--)
   ((closing-tag :initarg :closing-tag :initform "<![endif]-->"))
@@ -612,3 +613,31 @@ I.e. use only as required.")
 (define-html-node strike () () (:status . :obsolete))
 
 (define-html-node xmp () () (:status . :obsolete))
+
+
+;;; html nodes within an svg document tree. 
+
+(define-svg-node svg-video (video)
+  ((svg-aria-* :type svg-aria-*)
+   (system-language :attribute "systemLanguage" :animatable nil)
+   (required-extensions :attribute "requiredExtensions" :animatable nil))
+  (:element . "html:video"))
+
+(define-svg-node svg-audio (audio)
+  ((svg-aria-* :type svg-aria-*)
+   (system-language :attribute "systemLanguage" :animatable nil)
+   (required-extensions :attribute "requiredExtensions" :animatable nil))
+  (:element . "html:audio"))
+
+(define-svg-node svg-iframe (iframe)
+  ((svg-aria-* :type svg-aria-*)
+   (system-language :attribute "systemLanguage" :animatable nil)
+   (required-extensions :attribute "requiredExtensions" :animatable nil))
+  (:element . "html:iframe"))
+
+(define-svg-node svg-canvas (canvas)
+  ((svg-aria-* :type svg-aria-*)
+   (system-language :attribute "systemLanguage" :animatable nil)
+   (preserve-aspect-ratio :attribute "preserveAspectRatio")
+   (required-extensions :attribute "requiredExtensions" :animatable nil))
+  (:element . "html:canvas"))
