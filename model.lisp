@@ -5,10 +5,6 @@
 
 (defvar *end-title*)
 
-(defvar *end-style*)
-
-(defvar *end-script*)
-
 ;;; NOTE: THIS IS INCOMPLETE AND UNFINISHED!!!
 ;;; How the multiple attribute slots such as data-*, aria-* and event-*
 ;;; are handled may also change.
