@@ -36,6 +36,7 @@
   (:export
 
    ;; specials
+   :*html-element-class-map*
    :*preserve-whitespace*
    :*element-name*
    :*next-attribute*

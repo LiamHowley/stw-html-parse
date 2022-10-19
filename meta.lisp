@@ -45,3 +45,19 @@
     ((superclass element-class)
      (class html-element-class))
   t)
+
+(defvar *html-element-class-map*
+  (let ((table (make-hash-table :test #'equal)))
+    (maphash #'(lambda (element class)
+		 (setf (gethash element table) class))
+	     *element-class-map*)
+    table)
+  "Copying the elements from XML.PARSE:*ELEMENT-CLASS-MAP* 
+as they may well be called upon during parsing.")
+
+(defmethod shared-initialize :around ((class html-element-class) slot-names &key)
+  (declare (ignore slot-names))
+  ;; as there may be overlapping/duplicate element names/classes between differening xml schemas
+  ;; we need to specify the correct hash-table for writing.
+  (let ((*element-class-map* *html-element-class-map*))
+    (call-next-method)))

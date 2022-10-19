@@ -5,13 +5,16 @@
   (let ((*end-conditional* (read-until (match-string "<![endif]-->")))
 	(*end-title* (read-until (match-string "</title>" nil)))
 	(*end-script* (read-until (match-string "</script>" nil)))
-	(*end-style* (read-until (match-string "</style>" nil))))
+	(*end-style* (read-until (match-string "</style>" nil)))
+	(*element-class-map* *html-element-class-map*))
     (call-next-method)))
 	
 
 (defmethod read-content ((node !--[if))
   (with-slots (the-content) node
     (setf the-content (funcall *end-conditional*))))
+
+
 
 (defmethod map-attribute ((res (eql 'aria-*)) attribute length)
   (declare (ignore length)
