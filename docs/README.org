@@ -6,7 +6,7 @@
 
 ** Introduction
 
-STW-HTML-PARSE is yet another html parser. As a thin wrapper around [[https://github.com/liamhowley/stw-xml-parse][STW-XML-PARSE]], it is recommended to read that documentation. What follows here are basic differences in how use STW-HTML-PARSE.
+STW-HTML-PARSE is yet another html parser. As a thin wrapper around [[https://github.com/liamhowley/stw-xml-parse][STW-XML-PARSE]], it is recommended to read that documentation. What follows here are basic differences in how to use STW-HTML-PARSE.
 
 ** To Load
 
@@ -141,10 +141,3 @@ To remove the reader and return to the initial readtable.
 - How aria-* is parsed should be assessed.
   
 - Mathml and SVG 
-   
-
-
-  
-
-
-
