@@ -3,6 +3,7 @@
 	       "closer-mop"
 	       "stw-xml-parse"
 	       "stw-svg-parse"
+	       "stw-mathml-parse"
 	       "stw-utils")
   :description "A HTML to DOM style parser; parsing elements and attributes into CLOS objects."
   :serial t

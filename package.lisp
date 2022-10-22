@@ -2,7 +2,7 @@
 
 (defpackage html.parse
   (:nicknames :html)
-  (:use :cl :xml.parse :svg.parse)
+  (:use :cl :xml.parse :svg.parse :mathml.parse)
 
   (:import-from
    :contextl
