@@ -6,6 +6,7 @@
 	(*end-title* (read-until (match-string "</title>" nil)))
 	(*end-script* (read-until (match-string "</script>" nil)))
 	(*end-style* (read-until (match-string "</style>" nil)))
+	(*end-textarea* (read-until (match-string "</textarea>" nil)))
 	(*element-class-map* *html-element-class-map*))
     (call-next-method)))
 	

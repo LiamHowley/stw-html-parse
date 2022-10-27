@@ -5,6 +5,8 @@
 
 (defvar *end-title*)
 
+(defvar *end-textarea*)
+
 ;;; NOTE: THIS IS INCOMPLETE AND UNFINISHED!!!
 ;;; How the multiple attribute slots such as data-*, aria-* and event-*
 ;;; are handled may also change.
@@ -509,13 +511,16 @@ I.e. use only as required.")
   ((size :type integer)
    autocomplete autofocus disabled form multiple name required))
 
-(define-html-node textarea (flow-content phrasing-content interactive-content)
+(define-html-node textarea (flow-content phrasing-content interactive-content content-node)
   ((wrap :expected-value ("soft" "hard"))
    (cols :type integer)
    (rows :type integer)
    (minlength :type integer)
    (maxlength :type integer)
    autocomplete autofocus disabled form inputmode name placeholder readonly required))
+
+(defmethod initialize-instance :before ((class textarea) &key)
+  (setf (slot-value class 'closing-tag) *end-textarea*))
 
 (define-html-node details (flow-content sectioning-root interactive-content palpable-content)
   ((details-open :attribute "open" :initarg :open)))
