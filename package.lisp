@@ -51,6 +51,7 @@
    :xml-direct-slot-definition
 
    ;; model
+   :html-element-class
    :define-element-node
    :document-node
    :xml-document-node
