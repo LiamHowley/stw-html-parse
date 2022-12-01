@@ -48,12 +48,17 @@
 
 (defvar *html-element-class-map*
   (let ((table (make-hash-table :test #'equal)))
-    (maphash #'(lambda (element class)
-		 (setf (gethash element table) class))
-	     *element-class-map*)
+    (flet ((merge-elements (element-class-map)
+	     (maphash #'(lambda (element class)
+			  (setf (gethash element table) class))
+		      element-class-map)))
+      (merge-elements *element-class-map*)
+      (merge-elements *svg-element-class-map*)
+      (merge-elements *mathml-element-class-map*))
     table)
-  "Copying the elements from XML.PARSE:*ELEMENT-CLASS-MAP* 
-as they may well be called upon during parsing.")
+  "Copying the elements from XML.PARSE:*ELEMENT-CLASS-MAP*,
+SVG.PARSE:*SVG-ELEMENT-CLASS-MAP* and MATHML.PARSE:*MATHML-ELEMENT-CLASS-MAP*
+ as they may well be called upon during parsing.")
 
 (defmethod shared-initialize :around ((class html-element-class) slot-names &key)
   (declare (ignore slot-names))
