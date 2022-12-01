@@ -8,26 +8,26 @@
   :parent test-parse
     (of-type 'html-document-node *parsed-markup*)
   (let ((element (car (get-elements-by-tagname *parsed-markup* "a" *html-element-class-map*))))
-    (of-type 'a element)
-    (of-type 'html.parse::html-element-class (class-of element)))
+    (of-type 'html.parse::a element)
+    (of-type 'html-element-class (class-of element)))
   (of-type 'element-node (car (slot-value *parsed-markup* 'child-nodes)))
-  (of-type 'div (get-element-with-attribute *parsed-markup* "id"))
-  (of-type 'div (get-element-with-attribute-value *parsed-markup* "id" "container1"))
+  (of-type 'html.parse::div (get-element-with-attribute *parsed-markup* "id"))
+  (of-type 'html.parse::div (get-element-with-attribute-value *parsed-markup* "id" "container1"))
   ;; this is html where attribute values can only be a string. This should be false
   (let ((element (get-element-with-attribute-value *parsed-markup* "class" "container")))
-    (true (typep element 'div)))
+    (true (typep element 'html.parse::div)))
   (let ((element (get-element-with-attribute-value *parsed-markup* "class" "container" "square")))
-    (true (typep element 'div)))
+    (true (typep element 'html.parse::div)))
   (let ((elements (get-elements-with-attribute-value *parsed-markup* "class" "square")))
-    (of-type 'span (cadr elements)))
+    (of-type 'html.parse::span (cadr elements)))
   (let ((elements (get-elements-with-attribute-values *parsed-markup* "class" "square" "container")))
-    (of-type 'div (car elements)))
+    (of-type 'html.parse::div (car elements)))
   (let ((text-nodes (retrieve-text-nodes *parsed-markup*)))
     (is string= "caption" (text (car text-nodes)))
     (is string= ">" (text (cadr text-nodes)))
     (is string= "<" (text (caddr text-nodes)))
-    (of-type 'span (parent-node (car text-nodes)))
-    (of-type 'img (get-next-sibling (parent-node (car text-nodes)))))
+    (of-type 'html.parse::span (parent-node (car text-nodes)))
+    (of-type 'html.parse::img (get-next-sibling (parent-node (car text-nodes)))))
   (is string= "caption" (text (car (retrieve-text-nodes-with-token *parsed-markup* "cap"))))
   (is string= "caption" (text (car (retrieve-text-nodes-with-tokens *parsed-markup* "cap" "tion")))))
 
@@ -37,7 +37,6 @@
   :parent test-parse
   (is string= "<div id='container1' class='container square'><a href='/test' target='_blank'><span class='square'>caption</span><img src='/my-img-server' />&gt;&lt;</a></div>" (serialize *parsed-markup*)))
 
-
 (define-test reader...
   :parent test-parse
   (when (readerp)
@@ -45,11 +44,10 @@
   (true (set-reader #'read-html))
   (let* ((document-node (read-from-string "<input type=\"text\" id=\"name\" name=\"name\" required minlength=\"4\" maxlength=\"8\" size=\"10\">"))
 	 (child-node (car (slot-value document-node 'child-nodes))))
-    (print child-node)
-    (true (slot-exists-p child-node 'name))
-    (true (slot-value child-node 'required))
-    (false (slot-value child-node 'autocomplete))
-    (is string= "text" (slot-value child-node 'input-type))
+    (true (slot-exists-p child-node 'html.parse::name))
+    (true (slot-value child-node 'html.parse::required))
+    (false (slot-value child-node 'html.parse::autocomplete))
+    (is string= "text" (slot-value child-node 'html.parse::input-type))
     (is string= "<input id='name' type='text' maxlength='8' minlength='4' name='name' required size='10' />"
 	(write-to-string document-node))
     (of-type 'readtable (remove-reader))))
