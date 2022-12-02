@@ -1,7 +1,6 @@
 (in-package :cl-user)
 
 (defpackage html.parse
-  (:nicknames :html)
   (:use :cl :xml.parse :svg.parse :mathml.parse)
 
   (:import-from
