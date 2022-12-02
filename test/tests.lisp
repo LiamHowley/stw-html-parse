@@ -45,12 +45,13 @@
   (let* ((document-node (read-from-string "<input type=\"text\" id=\"name\" name=\"name\" required minlength=\"4\" maxlength=\"8\" size=\"10\">"))
 	 (child-node (car (slot-value document-node 'child-nodes))))
     (true (slot-exists-p child-node 'html.parse::name))
-    (true (slot-value child-node 'html.parse::required))
-    (false (slot-value child-node 'html.parse::autocomplete))
-    (is string= "text" (slot-value child-node 'html.parse::input-type))
+    (true (html-parse-required child-node))
+    (false (html-parse-autocomplete child-node))
+    (is string= "text" (html-parse-input-type child-node))
     (is string= "<input id='name' type='text' maxlength='8' minlength='4' name='name' required size='10' />"
 	(write-to-string document-node))
     (of-type 'readtable (remove-reader))))
+
 
 (define-test errors-and-generic-nodes...
   :parent test-parse
