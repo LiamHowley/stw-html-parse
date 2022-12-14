@@ -88,7 +88,6 @@
    :get-element-name
    :map-attribute-to-slot
    :map-attribute
-   :tag-open-char
    :serialize
    :write-to-file)
 
