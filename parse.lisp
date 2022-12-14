@@ -75,8 +75,7 @@
     (declare (inline match-character))
     (let ((char (stw-read-char)))
       (when char
-	(let* ((type (parse-type slot-type))
-	       (predicate (match-character char))
+	(let* ((predicate (match-character char))
 	       (reader (read-until predicate)))
 	  (case char
 	    (#\=
@@ -84,19 +83,19 @@
 	     (read-attribute-value slot attribute slot-type))
 	    ((#\" #\')
 	     (next)
-	     (cond ((eq type 'boolean)
+	     (cond ((eq slot-type 'boolean)
 		    (let ((value (funcall (read-until predicate))))
 		      (the boolean (string-equal value attribute))))
 		   (t
-		    (prog1 (read-into type predicate)
+		    (prog1 (read-into slot-type predicate)
 		      (next)))))
 	    ((#\space #\>)
 	     (the boolean 
-		  (cond ((eq type 'boolean)
+		  (cond ((eq slot-type 'boolean)
 			 t)
 			(t nil))))
 	    (t 
-	     (read-into type #'(lambda (test-char)
+	     (read-into slot-type #'(lambda (test-char)
 				 (member test-char '(#\space #\> #\/) :test #'char=)))))))))
 
 
@@ -111,34 +110,3 @@
 	 (bind-child-node node fragment)))
       (t
        (read-content node)))))
-
-
-
-(defmethod parse-fragment ((node document-node))
-  (declare (inline parse%))
-  (let ((*preserve-whitespace* t))
-    (parse% #'read-fragment node)))
-
-
-
-(defun parse-type% (type)
-  "returns non null type"
-  (declare (optimize (speed 3) (safety 0)))
-  (typecase type
-    (atom type)
-    (cons
-     (if (eq (car type) 'null)
-	 (cadr type)
-	 (car type)))))
-
-
-(declaim (inline parse-type))
-
-(defun parse-type (type)
-  "returns type"
-  (declare (optimize (speed 3) (safety 0))
-	   (inline parse-type%))
-  (case (parse-type% type)
-    ((integer real)
-     'fixnum)
-    (t type)))
