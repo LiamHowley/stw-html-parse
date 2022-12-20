@@ -19,12 +19,6 @@
 (defmethod map-attribute ((res (eql 'aria-*)) attribute length)
   (declare (ignore length)
 	   (ignore res))
-;; slots
-
-(defmethod prepare-slot
-    ((class element-node) (slot (eql 'event-*)))
-  (unless (slot-boundp class 'event-*)
-    (setf (slot-value class 'event-*) (make-instance 'global-event-attribute))))
   (call-reader :next-attribute))
 
 
