@@ -11,6 +11,10 @@
 (set-reader-function :end-textarea (read-until (match-string "</textarea>" nil)))
 
 
+(defmethod parse-document ((document html-document-node) &key (parser #'read-element) preserve-whitespace)
+  (declare (ignorable parser preserve-whitespace))
+  (let ((*element-class-map* *html-element-class-map*))
+    (call-next-method)))
 
 (defmethod map-attribute ((res (eql 'aria-*)) attribute length)
   (declare (ignore length)
