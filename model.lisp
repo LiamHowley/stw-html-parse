@@ -118,8 +118,9 @@ I.e. use only as required.")
 	 (:metaclass html-element-class)
 	 ,@rest))))
 
+
 (define-sgml-node !--[if (!--)
-  ((closing-tag :initarg :closing-tag :initform "<![endif]-->"))
+  ((closing-tag :initarg :closing-tag :initform :end-conditional))
   (:documentation "conditional comments - IE specific"))
 
 
@@ -162,7 +163,7 @@ I.e. use only as required.")
   (:permitted-parent . `(head)))
 
 (defmethod initialize-instance :before ((class title) &key)
-  (setf (slot-value class 'closing-tag) *end-title*))
+  (setf (slot-value class 'closing-tag) :end-title))
 
 
 (define-html-node style (metadata-content content-node)
@@ -171,7 +172,7 @@ I.e. use only as required.")
    media nonce))
 
 (defmethod initialize-instance :before ((class style) &key)
-  (setf (slot-value class 'closing-tag) *end-style*))
+  (setf (slot-value class 'closing-tag) :end-style))
 
 
 ;; document nodes
@@ -410,7 +411,7 @@ I.e. use only as required.")
    src async charset defer integrity language referrerpolicy nomodule))
 
 (defmethod initialize-instance :before ((class script) &key)
-  (setf (slot-value class 'closing-tag) *end-script*))
+  (setf (slot-value class 'closing-tag) :end-script))
 
 
 (define-html-node del (phrasing-content flow-content)
@@ -524,7 +525,7 @@ I.e. use only as required.")
    autocomplete autofocus disabled form inputmode name placeholder readonly required))
 
 (defmethod initialize-instance :before ((class textarea) &key)
-  (setf (slot-value class 'closing-tag) *end-textarea*))
+  (setf (slot-value class 'closing-tag) :end-textarea))
 
 (define-html-node details (flow-content sectioning-root interactive-content palpable-content)
   ((details-open :attribute "open" :initarg :open)))
