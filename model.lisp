@@ -94,6 +94,10 @@ I.e. use only as required.")
   (setf (slot-value class 'characters) *char-index*))
 
 
+(defmethod slot-unbound ((class html-element-class) object (slot-name (eql 'event-*)))
+  (setf (slot-value object 'event-*) (make-instance 'global-event-attribute)))
+
+
 (defmacro define-html-node (name supers slots &rest rest)
   "Wrapper on DEFINE-ELEMENT-NODE macro. "
   ;; add global slots
