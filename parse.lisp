@@ -33,20 +33,15 @@
 
 ;; assigning values
 
-(defmethod assign-value
-    ((class element-node) (slot html-direct-slot-definition) slot-name attribute value)
-  (unless (assign-slot-value class slot-name attribute value)
-    (call-next-method)))
-
-
-(defmethod assign-slot-value ((class element-node) (slot (eql 'event-*)) attribute value)
-  (declare (ignore slot))
+(defmethod assign-value ((class element-node) (slot-name (eql 'event-*)) attribute value)
   (with-slots (event-*) class
     (setf (slot-value event-* (find-symbol attribute 'html.parse)) value)))
 
-(defmethod assign-slot-value ((class element-node) (slot (eql 'aria-*)) attribute value)
+(defmethod assign-value ((class element-node) (slot-name (eql 'aria-*)) attribute value)
   (push (cons attribute value) (slot-value class 'aria-*)))
 
+(defmethod assign-value ((class element-node) (slot-name (eql 'data-*)) attribute value)
+  (push (cons attribute value) (slot-value class 'data-*)))
 
 (defmethod read-attribute-value ((slot html-direct-slot-definition) attribute slot-type)
   (declare (inline match-character))
