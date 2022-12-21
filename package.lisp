@@ -26,12 +26,14 @@
    :match-string
    :match-character
    :read-until
-   :read-and-decode)
+   :read-and-decode
+   :consume-until)
 
   (:import-from
    :closer-mop
    :slot-definition-name
    :slot-definition-type
+   :standard-direct-slot-definition
    :effective-slot-definition-class
    :direct-slot-definition-class
    :compute-effective-slot-definition
