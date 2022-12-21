@@ -47,7 +47,7 @@
     (true (slot-exists-p child-node 'html.parse::name))
     (true (html-parse-required child-node))
     (false (html-parse-autocomplete child-node))
-    (is string= "text" (html-parse-input-type child-node))
+    (is string= "text" (input-type child-node))
     (is string= "<input id='name' type='text' maxlength='8' minlength='4' name='name' required size='10' />"
 	(write-to-string document-node))
     (of-type 'readtable (remove-reader))))
