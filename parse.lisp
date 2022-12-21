@@ -58,13 +58,13 @@
   (declare (inline match-character stw-read-char))
   (let ((char (stw-read-char)))
     (when char
-      (let ((reader (attribute-value-reader char slot-type)))
-	(case char
-	  (#\=
-	   (next)
-	   (read-attribute-value slot attribute slot-type))
-	  ((#\" #\')
-	   (next)
+      (case char
+	(#\=
+	 (next)
+	 (read-attribute-value slot attribute slot-type))
+	((#\" #\')
+	 (next)
+	 (let ((reader (attribute-value-reader char slot-type)))
 	   (cond ((eq slot-type 'boolean)
 		  (let ((value (call-reader reader)))
 		    (the boolean (string-equal value attribute))))
@@ -85,13 +85,14 @@
 				:report "Ignore all values."
 				(funcall (consume-until (match-character char)))
 				nil))))
-		    (next)))))
-	  ((#\space #\>)
-	   (the boolean 
-		(cond ((eq slot-type 'boolean)
-		       t)
-		      (t nil))))
-	  (t 
+		    (next))))))
+	((#\space #\>)
+	 (the boolean 
+	      (cond ((eq slot-type 'boolean)
+		     t)
+		    (t nil))))
+	(t 
+	 (let ((reader (attribute-value-reader char slot-type)))
 	   (read-into slot-type reader)))))))
 
 
