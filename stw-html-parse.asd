@@ -4,7 +4,8 @@
 	       "stw-xml-parse"
 	       "stw-svg-parse"
 	       "stw-mathml-parse"
-	       "stw-utils")
+	       "stw-utils"
+	       "cl-comp")
   :description "A HTML to DOM style parser; parsing elements and attributes into CLOS objects."
   :serial t
   :components ((:file "package")

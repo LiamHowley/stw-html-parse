@@ -4,6 +4,10 @@
   (:use :cl :xml.parse :svg.parse :mathml.parse)
 
   (:import-from
+   :cl-comp
+   :filter-slots-by-type)
+  
+  (:import-from
    :contextl
    :singleton-class)
 
