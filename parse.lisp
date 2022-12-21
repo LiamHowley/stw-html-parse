@@ -36,7 +36,7 @@
 
 
 
-(declaim (ftype (function (character type) keyword) attribute-value-reader)
+(declaim (ftype (function (character symbol) keyword) attribute-value-reader)
 	 (inline attribute-value-reader))
 
 (defun attribute-value-reader (char type)
