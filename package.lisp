@@ -22,6 +22,7 @@
    :*document*
    :*length*
    :stw-read-char
+   :stw-peek-next-char
    :next
    :match-string
    :match-character
@@ -60,8 +61,6 @@
    :html-element-class
    :define-element-node
    :document-node
-   :xml-document-node
-   :html-document-node
    :dom-node
    :standard-element-node
    :element-node

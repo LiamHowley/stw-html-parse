@@ -15,11 +15,11 @@ Use quickload to call ~(ql:quickload :stw-html-parse)~. If not found in the quic
 ** Parsing
 
 #+BEGIN_SRC lisp
-(parse-document (make-instance 'html-document-node :file <file>)) or
-(parse-document (make-instance 'html-document-node :document <document>))
+(parse-document <file-pathname>)) or
+(parse-document <documen-stringt>))
 #+END_SRC
 
-It is important to remember that when calling PARSE-DOCUMENT, with either a string or pathname, a node of type XML-DOCUMENT-NODE will be created. To parse, call PARSE-DOCUMENT with an instance of HTML-DOCUMENT-NODE passed as the first argument.
+When calling PARSE-DOCUMENT, a node of type DOCUMENT-NODE, with the slots CHILD-NODES, DOCUMENT and FILE, will be created and returned. While parsing a html document draws heavily on the STW-XML-PARSE parser, there are some distinctions between html and xml that should be noted.
 
 *** Some distinctions
 
@@ -139,5 +139,3 @@ To remove the reader and return to the initial readtable.
 - Specialize BIND-CHILD-NODE for those elements that may be missing element tags, so to parse them correctly.
 
 - How aria-* is parsed should be assessed.
-  
-- Mathml and SVG 

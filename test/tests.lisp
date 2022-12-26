@@ -2,11 +2,11 @@
 
 (defvar *markup* "<div id='container1' class='container square'><a href=\"/test\" target=\"_blank\"><span class='square'>caption</span><img src='/my-img-server'/>><</a></div>")
 
-(defvar *parsed-markup* (parse-document (make-instance 'html-document-node :document *markup*)))
+(defvar *parsed-markup* (parse-document *markup* :element-class-map *html-element-class-map*))
 
 (define-test parse-markup...
   :parent test-parse
-    (of-type 'html-document-node *parsed-markup*)
+    (of-type 'document-node *parsed-markup*)
   (let ((element (car (get-elements-by-tagname *parsed-markup* "a" *html-element-class-map*))))
     (of-type 'html.parse::a element)
     (of-type 'html-element-class (class-of element)))
@@ -56,9 +56,12 @@
 (define-test errors-and-generic-nodes...
   :parent test-parse
   (setf *mode* :strict)
-  (fail (parse-document "<custom-node custom-slot='value'>a custom node</custom-node>") 'class-not-found-error)
+  (fail (parse-document "<custom-node custom-slot='value'>a custom node</custom-node>"
+			:element-class-map *html-element-class-map*)
+      'class-not-found-error)
   (setf *mode* :silent)
-  (let* ((document-node (parse-document "<custom-node custom-slot='value'>a custom node</custom-node>"))
+  (let* ((document-node (parse-document "<custom-node custom-slot='value'>a custom node</custom-node>"
+					:element-class-map *html-element-class-map*))
 	 (child-node (car (slot-value document-node 'child-nodes))))
     (of-type 'generic-node child-node)
     (is string= "a custom node" (text (car (retrieve-text-nodes-with-token document-node "a custom node"))))

@@ -1,25 +1,9 @@
 (in-package html.parse)
 
-(set-reader-function :end-conditional (read-until (match-string "<![endif]-->")))
-
-(set-reader-function :end-title (read-until (match-string "</title>" nil)))
-
-(set-reader-function :end-script (read-until (match-string "</script>" nil)))
-
-(set-reader-function :end-style (read-until (match-string "</style>" nil)))
-
-(set-reader-function :end-textarea (read-until (match-string "</textarea>" nil)))
-
-
-(defmethod parse-document ((document html-document-node) &key (parser #'read-element) preserve-whitespace)
-  (declare (ignorable parser preserve-whitespace))
-  (let ((*element-class-map* *html-element-class-map*))
-    (call-next-method)))
 
 (defmethod map-attribute ((res (eql 'aria-*)) attribute length)
-  (declare (ignore length)
-	   (ignore res))
-  (call-reader :next-attribute))
+  (declare (ignore length res))
+  (read-until (match-character #\space #\= #\> #\/)))
 
 
 ;; assigning values
@@ -35,24 +19,6 @@
   (push (cons attribute value) (slot-value class 'data-*)))
 
 
-
-(declaim (ftype (function (character symbol) keyword) attribute-value-reader)
-	 (inline attribute-value-reader))
-
-(defun attribute-value-reader (char type)
-  (declare (optimize (speed 3) (safety 0)))
-  (case type
-    ((cons list array)
-     (ecase char
-       (#\' :read-until-single-quote)
-       (#\" :read-until-double-quote)))
-    (t
-     (case char
-       (#\' :read-until-single-quote)
-       (#\" :read-until-double-quote)
-       (t :attribute-delimiter)))))
-
-
 (defmethod read-attribute-value
     ((slot html-direct-slot-definition) attribute slot-type)
   (declare (inline match-character stw-read-char))
@@ -64,13 +30,13 @@
 	 (read-attribute-value slot attribute slot-type))
 	((#\" #\')
 	 (next)
-	 (let ((reader (attribute-value-reader char slot-type)))
+	 (let ((predicate (attribute-value-predicate char slot-type)))
 	   (cond ((eq slot-type 'boolean)
-		  (let ((value (call-reader reader)))
+		  (let ((value (read-until predicate)))
 		    (the boolean (string-equal value attribute))))
 		 (t
 		  (prog1 
-		      (let ((value (read-into slot-type reader)))
+		      (let ((value (read-into slot-type predicate)))
 			(if (char= (stw-read-char) char)
 			    value
 			    (restart-case
@@ -79,11 +45,11 @@
 				user-supplied)
 			      (use-first-found-value ()
 				:report "Use first found value and skip the rest"
-				(funcall (consume-until (match-character char)))
+				(consume-until (match-character char))
 				value)
 			      (ignore-attribute ()
 				:report "Ignore all values."
-				(funcall (consume-until (match-character char)))
+				(consume-until (match-character char))
 				nil))))
 		    (next))))))
 	((#\space #\>)
@@ -92,18 +58,22 @@
 		     t)
 		    (t nil))))
 	(t 
-	 (let ((reader (attribute-value-reader char slot-type)))
-	   (read-into slot-type reader)))))))
+	 (let ((predicate (attribute-value-predicate char slot-type)))
+	   (read-into slot-type predicate)))))))
 
 
 (defmethod read-fragment ((node document-node))
-  (let* ((char (stw-read-char)))
+  (let ((char (stw-read-char)))
     (case char
       (#\<
-       (next)
-       (let ((fragment (read-into-object)))
-	 (when (typep fragment 'element-node)
-	   (next))
-	 (bind-child-node node fragment)))
+       (case (stw-peek-next-char)
+	 (#\/
+	  (read-content node))
+	 (t
+	  (next)
+	  (let ((fragment (read-into-object)))
+	    (when (typep fragment 'element-node)
+	      (next))
+	    (bind-child-node node fragment)))))
       (t
        (read-content node)))))

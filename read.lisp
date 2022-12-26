@@ -14,4 +14,4 @@
        (let ((output (with-output-to-string (out)
 		       (write-char #\< out)
 		       (parse-stream stream out))))
-	 (parse-document (make-instance 'html-document-node :document output)))))))
+	 (parse-document output :element-class-map *html-element-class-map*))))))
