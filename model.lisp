@@ -110,7 +110,8 @@ I.e. use only as required.")
 
 
 (define-sgml-node !--[if (!--)
-  ((closing-tag :initarg :closing-tag :initform "<![endif]-->"))
+  ()
+  (:closing-tag . "<![endif]-->")
   (:documentation "conditional comments - IE specific"))
 
 
@@ -150,19 +151,15 @@ I.e. use only as required.")
 
 (define-html-node title (metadata-content content-node)
   ()
-  (:permitted-parent . `(head)))
-
-(defmethod initialize-instance :before ((class title) &key)
-  (setf (slot-value class 'closing-tag) "</title>"))
+  (:permitted-parent . `(head))
+  (:closing-tag . "</title>"))
 
 
 (define-html-node style (metadata-content content-node)
   ((style-type :attribute "type" :initarg :type)
    (scoped :status :deprecated)
-   media nonce))
-
-(defmethod initialize-instance :before ((class style) &key)
-  (setf (slot-value class 'closing-tag) "</style>"))
+   media nonce)
+  (:closing-tag . "</style>"))
 
 
 ;; document nodes
@@ -398,11 +395,8 @@ I.e. use only as required.")
 (define-html-node script (metadata-content content-node flow-content phrasing-content)
   ((script-type :attribute "type" :initarg :type)
    (crossorigin :expected-value ("anonymous" "use-credentials"))
-   src async charset defer integrity language referrerpolicy nomodule))
-
-(defmethod initialize-instance :before ((class script) &key)
-  (setf (slot-value class 'closing-tag) "</script>"))
-
+   src async charset defer integrity language referrerpolicy nomodule)
+  (:closing-tag . "</script>"))
 
 (define-html-node del (phrasing-content flow-content)
   (cite datetime))
@@ -512,10 +506,8 @@ I.e. use only as required.")
    (rows :type integer)
    (minlength :type integer)
    (maxlength :type integer)
-   autocomplete autofocus disabled form inputmode name placeholder readonly required))
-
-(defmethod initialize-instance :before ((class textarea) &key)
-  (setf (slot-value class 'closing-tag) "</textarea>"))
+   autocomplete autofocus disabled form inputmode name placeholder readonly required)
+  (:closing-tag . "</textarea>"))
 
 (define-html-node details (flow-content sectioning-root interactive-content palpable-content)
   ((details-open :attribute "open" :initarg :open)))
