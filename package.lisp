@@ -45,13 +45,6 @@
    ;; specials
    :*html-element-class-map*
    :*preserve-whitespace*
-   :*element-name*
-   :*next-attribute*
-   :*next-element*
-   :*element-tags*
-   :*end-sgml*
-   :*end-comment*
-   :*end-cdata*
 
    ;; meta
    :element-class
