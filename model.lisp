@@ -70,10 +70,11 @@ of the document."))
     '((html-class :attribute "class" :initarg :class :type cons :accessor html-class)
       (data-* :initarg :data-* :type multiple-attributes :accessor data-*)
       (aria-* :initarg :aria-* :type multiple-attributes :accessor aria-*)
-      (event-* :type global-event-attribute
-	       :attribute "on*"
-	       :reader event-*
-	       :documentation "lazy loaded, as the large volume of global events would clobber performance. 
+      (event-*
+       :type global-event-attribute
+       :attribute "on*"
+       :reader event-*
+       :documentation "lazy loaded, as the large volume of global events would clobber performance. 
 I.e. use only as required.")
       (dir :initarg :dir :expected-value ("ltr" "rtl" "auto") :accessor dir)
       (translate :initarg :translate :expected-value ("yes" "no") :accessor translate)
