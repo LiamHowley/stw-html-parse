@@ -2,9 +2,22 @@
 
 
 (defmethod map-attribute ((res (eql 'aria-*)) attribute length)
-  (declare (ignore length res))
+  (declare (ignore attribute length res))
   (read-until (match-character #\space #\= #\> #\/)))
 
+(defmethod map-attribute ((res (eql 'data-*)) attribute length)
+  (declare (ignore attribute length res))
+  (read-until (match-character #\space #\= #\> #\/)))
+
+(defmethod map-attribute ((res (eql 'event-*)) attribute length)
+  (declare (ignore attribute length res))
+  (read-until (match-character #\space #\= #\> #\/)))
+
+(defmethod generic-attribute ((class html-element-class))
+  (values (find-slot-definition class
+				'generic-attribute
+				'html-direct-slot-definition)
+	  'generic-attribute))
 
 ;; assigning values
 
@@ -52,7 +65,7 @@
 				(consume-until (match-character char))
 				nil))))
 		    (next))))))
-	((#\space #\>)
+	((#\space #\> #\newline #\return #\linefeed)
 	 (the boolean 
 	      (cond ((eq slot-type 'boolean)
 		     t)
@@ -61,19 +74,27 @@
 	 (let ((predicate (attribute-value-predicate char slot-type)))
 	   (read-into slot-type predicate)))))))
 
+(defmethod read-subelements ((node html))
+  (let ((*embedded* t))
+    (call-next-method)))
 
 (defmethod read-fragment ((node document-node))
-  (let ((char (stw-read-char)))
-    (case char
-      (#\<
-       (case (stw-peek-next-char)
-	 (#\/
-	  (read-content node))
-	 (t
-	  (next)
-	  (let ((fragment (read-into-object)))
-	    (when (typep fragment 'element-node)
-	      (next))
-	    (bind-child-node node fragment)))))
-      (t
-       (read-content node)))))
+  (let ((*case-sensitive* nil))
+    (read-subelements node)))
+
+
+;; embedded setup
+
+(defmethod initialize-node ((node svg) filter)
+  "As there are overlapping/duplicate element names/classes between svg and html
+   we need to specify the correct class map for reading."
+  (let ((*element-class-map* *embedded-svg-class-map*)
+	(*case-sensitive* t))
+    (call-next-method)))
+
+(defmethod initialize-node ((node math) filter)
+  "As there are overlapping/duplicate element names/classes between math and html
+   we need to specify the correct class map for reading."
+  (let ((*element-class-map* *embedded-mathml-class-map*)
+	(*case-sensitive* t))
+    (call-next-method)))

@@ -55,14 +55,14 @@
 
 (define-test errors-and-generic-nodes...
   :parent test-parse
-  (setf *mode* :strict)
-  (fail (parse-document "<custom-node custom-slot='value'>a custom node</custom-node>"
-			:element-class-map *html-element-class-map*)
-      'class-not-found-error)
-  (setf *mode* :silent)
-  (let* ((document-node (parse-document "<custom-node custom-slot='value'>a custom node</custom-node>"
-					:element-class-map *html-element-class-map*))
-	 (child-node (car (slot-value document-node 'child-nodes))))
-    (of-type 'generic-node child-node)
-    (is string= "a custom node" (text (car (retrieve-text-nodes-with-token document-node "a custom node"))))
-    (of-type 'generic-node (get-element-with-attribute document-node "custom-slot"))))
+  (let ((*mode* :strict))
+    (fail (parse-document "<custom-node custom-slot='value'>a custom node</custom-node>"
+			  :element-class-map *html-element-class-map*)
+	  'class-not-found-error)
+    (handler-bind ((class-not-found-error #'assign-generic-node))
+      (let* ((document-node (parse-document "<custom-node custom-slot='value'>a custom node</custom-node>"
+					    :element-class-map *html-element-class-map*))
+	     (child-node (car (slot-value document-node 'child-nodes))))
+	(of-type 'generic-node child-node)
+	(is string= "a custom node" (text (car (retrieve-text-nodes-with-token document-node "a custom node"))))
+	(of-type 'generic-node (get-element-with-attribute document-node "custom-slot"))))))
