@@ -5,7 +5,8 @@
 
   (:import-from
    :cl-comp
-   :filter-slots-by-type)
+   :filter-slots-by-type
+   :find-slot-definition)
   
   (:import-from
    :contextl
@@ -14,7 +15,8 @@
   (:import-from
    :stw.util
    :ensure-list
-   :parse-stream)
+   :parse-stream
+   :merge-hash-tables)
 
   (:import-from
    :stw.util
@@ -72,7 +74,7 @@
    ;; functions
    :parse-document
    :read-from-file
-   :read-element
+   :read-fragment
    :read-element-name
    :read-element-attributes
    :read-attribute
