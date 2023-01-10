@@ -46,23 +46,23 @@
      (class html-element-class))
   t)
 
-(defvar *html-element-class-map*
-  (let ((table (make-hash-table :test #'equal)))
-    (flet ((merge-elements (element-class-map)
-	     (maphash #'(lambda (element class)
-			  (setf (gethash element table) class))
-		      element-class-map)))
-      (merge-elements *element-class-map*)
-      (merge-elements *svg-element-class-map*)
-      (merge-elements *mathml-element-class-map*))
-    table)
-  "Copying the elements from XML.PARSE:*ELEMENT-CLASS-MAP*,
-SVG.PARSE:*SVG-ELEMENT-CLASS-MAP* and MATHML.PARSE:*MATHML-ELEMENT-CLASS-MAP*
- as they may well be called upon during parsing.")
+(defvar *html-element-class-map* (make-hash-table :test #'equal))
+
+(defvar *embedded-svg-class-map* (make-hash-table :test #'equal))
+
+(defvar *embedded-mathml-class-map* (make-hash-table :test #'equal))
 
 (defmethod shared-initialize :around ((class html-element-class) slot-names &key)
   (declare (ignore slot-names))
   ;; as there may be overlapping/duplicate element names/classes between differening xml schemas
   ;; we need to specify the correct hash-table for writing.
   (let ((*element-class-map* *html-element-class-map*))
-    (call-next-method)))
+    (call-next-method)
+    (setf (gethash "svg" *html-element-class-map*) (find-class 'svg)
+	  (gethash "math" *html-element-class-map*) (find-class 'math))
+    (merge-hash-tables *embedded-svg-class-map*
+		       *svg-element-class-map*
+		       *html-element-class-map*)
+    (merge-hash-tables *embedded-mathml-class-map*
+		       *mathml-element-class-map*
+		       *html-element-class-map*)))
